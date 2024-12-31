@@ -1,0 +1,40 @@
+version: '3'
+
+services:
+  cache:
+    image: redis:latest
+    container_name: redis
+    restart: always
+    ports:
+      - '6379:6379'
+      - '8001:8001'
+
+  poll-api:
+    image: poll-container:v1
+    container_name: poll-api-1
+    restart: always
+    ports:
+      - '2080:2080'
+    depends_on:
+      - cache
+
+  voter-api:
+    image: voter-container:v1
+    container_name: voter-api-1
+    restart: always
+    ports:
+      - '1080:1080'
+    depends_on:
+      - cache
+
+  votes-api:
+    image: votes-container:v1
+    container_name: votes-api-1
+    restart: always
+    ports:
+      - '3080:3080'
+    depends_on:
+      - cache
+
+networks:
+  default:
